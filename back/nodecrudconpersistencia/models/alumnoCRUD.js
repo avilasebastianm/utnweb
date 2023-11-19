@@ -1,32 +1,74 @@
 import  { Alumno }  from './alumnos.js';
+import e from "express";
 
 
 async function consultarAlumnos() {
     const alumnos = await Alumno.findAll({
-        attributes: ['nombre', 'apellido', 'email']
+        attributes: ['id','nombre', 'apellido', 'email']
     })
-    return alumnos.map(alumno => alumno.dataValues/**con esto nos trae los valores requeridos en json*/)
+    console.log( alumnos.map(alumno => alumno.dataValues/**con esto nos trae los valores requeridos en json*/))
 //JSON.stringify(alumnos,null,1) //con esto nos trae los valores requeridos en json
 
 }
 
-async function consultarAlumnoPorId(id) {
-    const alumno = await Alumno.findByPk(id);
+async function consultarAlumnoPorId(id){
+    return  await Alumno.findByPk(id)
+        .then((alumno) => {
         if (!alumno ) {
-            console.log('No se encontró el alumno');
-
+            throw new Error('No se encontro el alumno')
         }
-    return console.log(alumno.dataValues)
+            return alumno.dataValues
+    })
+            .catch((error) => {
+       throw error;
+    });
 }
 
-async function crearAlumno() {
+async function crearAlumno(nombre, apellido, email) {
 
-    const alumno = await Alumno.create({
-        nombre: 'Juan',
-        apellido: 'Perez',
-        email: 's3WEQWEd@asd.com',
-    }, )   };
+    return await Alumno.create({
+        nombre: nombre,
+        apellido: apellido,
+        email: email,
+    },).then((alumno) => {
+        return alumno.dataValues
+    }).catch((error) => {
+            throw error;
+        });
+    };
+
+async function actualizarAlumno(id, nombre, apellido, email) {
+    return await Alumno.update({
+        nombre: nombre,
+        apellido: apellido,
+        email: email,
+    }, {
+        where: {
+            id: id
+        }
+    }).then((alumno) => {
+        return alumno.dataValues
+    }).catch((error) => {
+        throw error;
+    });
+};
+async function eliminarAlumno(id) {
+    return await Alumno.destroy({
+        where: {
+            id: id
+        }
+    }).then((alumno) => {
+        return alumno.dataValues
+    }).catch((error) => {
+        throw error;
+    });
+};
+
+
 
 //consultarAlumnos()
 //crearAlumno()
-consultarAlumnoPorId(20)
+//consultarAlumnoPorId(20)
+//crearAlumno('seba','gomez','awsd@asd')
+eliminarAlumno(17);
+//actualizarAlumno(17,'maxi','perez','awsd@asd')
