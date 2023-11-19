@@ -18,22 +18,10 @@
  */
 
 
-const express =require('express');
-const app = express();
-const port = 3000;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-app.listen(port,()=>{console.log(`Servidor iniciado en el puerto ${port}`);});
+import express from 'express';
+const app = express();//ejecutamos express
+const ruta = `/alumno/:id` //ruta con parametro
+app.use(express.json());//ejecutamos el json
+app.use(express.urlencoded({extended:false}));
+import {body, validationResult} from 'express-validator';
+app.listen(3000,()=>{console.log("Servidor iniciado");})
